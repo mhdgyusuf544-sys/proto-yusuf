@@ -94,3 +94,6 @@
   .hero::before, .hero-particles i, .typing-caret { animation: none; }
   .nav-links, .nav-links.open { transition: none; }
 }
+.project-art:before, .project-art:after { transition: transform 500ms cubic-bezier(.2,.75,.25,1); }
+.project-card:hover .project-art:before { transform: scale(1.06); }
+.project-card:hover .project-art:after { transform: scale(.94) rotate(10deg); }

@@ -3,6 +3,7 @@
   const $ = (s, root = document) => root.querySelector(s);
   const esc = (s = "") => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const age = (date) => { const birth = new Date(`${date}T00:00:00`), now = new Date(); let n = now.getFullYear() - birth.getFullYear(); if (now.getMonth() < birth.getMonth() || (now.getMonth() === birth.getMonth() && now.getDate() < birth.getDate())) n--; return n; };
+  let scrollRevealObserver;
   const p = data.profile;
   $("#hero-name").textContent = p.name; $("#hero-role").textContent = p.headline; $("#hero-description").textContent = p.description; $("#about-description").textContent = p.about;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -51,7 +52,6 @@
   nav.addEventListener("click", e => { if (e.target.closest("a")) { nav.classList.remove("open"); toggle.setAttribute("aria-expanded", "false"); toggle.setAttribute("aria-label", "Buka menu"); } });
   const links = [...nav.querySelectorAll("a")], sections = links.map(a => document.querySelector(a.getAttribute("href"))).filter(Boolean);
   if ("IntersectionObserver" in window) { const activeObserver = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle("current", a.hash === `#${e.target.id}`)); }), { rootMargin: "-35% 0px -55% 0px" }); sections.forEach(s => activeObserver.observe(s)); }
-  let scrollRevealObserver;
   function observeReveals() {
     const targets = document.querySelectorAll(".section-heading, .bio-card, .about-note, .education-item, .skill-card, .project-card, .contact-copy, .contact-card");
     if (reduceMotion || !("IntersectionObserver" in window)) {
