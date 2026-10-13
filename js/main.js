@@ -48,8 +48,17 @@
   function setPhoto(mode) { photoMode = mode; const path = mode === "profile" ? p.profileImage : p.avatarImage; img.src = mode === "profile" ? path : p.avatarImage; img.alt = mode === "profile" ? `Foto profil ${p.name}` : `Avatar ilustrasi ${p.name}`; document.querySelectorAll(".photo-option").forEach(b => b.classList.toggle("active", b.dataset.photo === mode)); }
   document.querySelectorAll(".photo-option").forEach(b => b.addEventListener("click", () => setPhoto(b.dataset.photo)));
   img.addEventListener("error", () => { if (photoMode === "profile") { img.src = p.avatarImage; img.alt = `Avatar ilustrasi ${p.name}; tambahkan foto ke ${p.profileImage}`; } }); setPhoto(photoMode);
-  const toggle = $(".menu-toggle"), nav = $("#nav-links"); toggle.addEventListener("click", () => { const open = toggle.getAttribute("aria-expanded") !== "true"; toggle.setAttribute("aria-expanded", String(open)); toggle.setAttribute("aria-label", open ? "Tutup menu" : "Buka menu"); nav.classList.toggle("open", open); });
-  nav.addEventListener("click", e => { if (e.target.closest("a")) { nav.classList.remove("open"); toggle.setAttribute("aria-expanded", "false"); toggle.setAttribute("aria-label", "Buka menu"); } });
+  const toggle = $(".menu-toggle"), nav = $("#nav-links");
+  const setMenu = (open) => {
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Tutup menu" : "Buka menu");
+    nav.classList.toggle("open", open);
+    document.body.classList.toggle("menu-open", open);
+  };
+  toggle.addEventListener("click", () => setMenu(toggle.getAttribute("aria-expanded") !== "true"));
+  nav.addEventListener("click", e => { if (e.target.closest("a")) setMenu(false); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") setMenu(false); });
+  window.addEventListener("resize", () => { if (window.innerWidth > 680) setMenu(false); }, { passive: true });
   const links = [...nav.querySelectorAll("a")], sections = links.map(a => document.querySelector(a.getAttribute("href"))).filter(Boolean);
   if ("IntersectionObserver" in window) { const activeObserver = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle("current", a.hash === `#${e.target.id}`)); }), { rootMargin: "-35% 0px -55% 0px" }); sections.forEach(s => activeObserver.observe(s)); }
   function observeReveals() {
