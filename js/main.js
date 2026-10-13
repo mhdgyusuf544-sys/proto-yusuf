@@ -5,6 +5,22 @@
   const age = (date) => { const birth = new Date(`${date}T00:00:00`), now = new Date(); let n = now.getFullYear() - birth.getFullYear(); if (now.getMonth() < birth.getMonth() || (now.getMonth() === birth.getMonth() && now.getDate() < birth.getDate())) n--; return n; };
   const p = data.profile;
   $("#hero-name").textContent = p.name; $("#hero-role").textContent = p.headline; $("#hero-description").textContent = p.description; $("#about-description").textContent = p.about;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const typedRole = $("#typing-role");
+  if (typedRole && !reduceMotion) {
+    const roles = ["Computer Science Student", "Aspiring Software Developer", "Web Development Learner", "IoT Enthusiast"];
+    let roleIndex = 0, charIndex = roles[0].length, deleting = true;
+    const typeNext = () => {
+      const role = roles[roleIndex];
+      charIndex += deleting ? -1 : 1;
+      typedRole.textContent = role.slice(0, Math.max(0, charIndex));
+      let delay = deleting ? 42 : 72;
+      if (charIndex <= 0) { deleting = false; roleIndex = (roleIndex + 1) % roles.length; delay = 300; }
+      else if (charIndex >= roles[roleIndex].length && !deleting) { deleting = true; delay = 1500; }
+      window.setTimeout(typeNext, delay);
+    };
+    window.setTimeout(typeNext, 1800);
+  }
   $("#bio-name").textContent = p.name;
   const details = [["✳", "Nama panggilan", p.nickname], ["⌖", "Tempat lahir", p.birthplace], ["◷", "Tanggal lahir", p.showBirthDate ? `${new Date(`${p.birthDate}T00:00:00`).toLocaleDateString("id-ID", {day:"numeric", month:"long", year:"numeric"})} · ${age(p.birthDate)} tahun` : ""], ["⌂", "Domisili", p.city], ["⌘", "Universitas", p.university], ["▤", "Program studi", p.study], ["◉", "Semester", String(p.semester)]];
   $("#bio-list").innerHTML = details.filter(([, , v]) => v).map(([icon, label, value]) => `<div class="bio-row"><span class="bio-icon" aria-hidden="true">${icon}</span><span class="bio-label">${esc(label)}</span><b>${esc(value)}</b></div>`).join("");
@@ -35,6 +51,36 @@
   nav.addEventListener("click", e => { if (e.target.closest("a")) { nav.classList.remove("open"); toggle.setAttribute("aria-expanded", "false"); toggle.setAttribute("aria-label", "Buka menu"); } });
   const links = [...nav.querySelectorAll("a")], sections = links.map(a => document.querySelector(a.getAttribute("href"))).filter(Boolean);
   if ("IntersectionObserver" in window) { const activeObserver = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle("current", a.hash === `#${e.target.id}`)); }), { rootMargin: "-35% 0px -55% 0px" }); sections.forEach(s => activeObserver.observe(s)); }
-  function observeReveals() { document.querySelectorAll(".reveal").forEach(x => x.classList.add("visible")); }
+  let scrollRevealObserver;
+  function observeReveals() {
+    const targets = document.querySelectorAll(".section-heading, .bio-card, .about-note, .education-item, .skill-card, .project-card, .contact-copy, .contact-card");
+    if (reduceMotion || !("IntersectionObserver" in window)) {
+      targets.forEach(el => { el.classList.remove("will-reveal"); el.classList.add("is-revealed"); });
+      return;
+    }
+    if (!scrollRevealObserver) scrollRevealObserver = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-revealed");
+        scrollRevealObserver.unobserve(entry.target);
+      }
+    }), { rootMargin: "0px 0px -7% 0px", threshold: .04 });
+    targets.forEach((el, index) => {
+      if (el.classList.contains("is-revealed") || el.classList.contains("will-reveal")) return;
+      el.style.setProperty("--reveal-delay", `${(index % 4) * 65}ms`);
+      el.classList.add("will-reveal");
+      scrollRevealObserver.observe(el);
+    });
+  }
   observeReveals();
+
+  const updateNavbar = () => document.querySelector(".site-header").classList.toggle("scrolled", window.scrollY > 12);
+  updateNavbar(); window.addEventListener("scroll", updateNavbar, { passive: true });
+  projectsEl.addEventListener("pointermove", e => {
+    if (e.pointerType !== "mouse") return;
+    const card = e.target.closest(".project-card");
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    card.style.setProperty("--pointer-x", `${e.clientX - rect.left}px`);
+    card.style.setProperty("--pointer-y", `${e.clientY - rect.top}px`);
+  });
 })();
