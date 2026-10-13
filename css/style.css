@@ -12,3 +12,34 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-copy, .portrait-frame, .floating-tag, .scroll-cue { animation: none; }
 }
+/* Additional entrance and interaction motion. Content never fades out. */
+@keyframes header-settle {
+  from { transform: translateY(-10px); }
+  to { transform: translateY(0); }
+}
+@keyframes portrait-settle {
+  from { transform: scale(1.035); }
+  to { transform: scale(1); }
+}
+@keyframes glow-breathe {
+  0%, 100% { opacity: .58; transform: scale(.96); }
+  50% { opacity: .9; transform: scale(1.06); }
+}
+@keyframes status-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(114,220,170,.06), 0 0 12px rgba(114,220,170,.35); }
+  50% { box-shadow: 0 0 0 5px rgba(114,220,170,.08), 0 0 17px rgba(114,220,170,.65); }
+}
+.site-header { animation: header-settle 500ms cubic-bezier(.2,.75,.25,1) both; }
+.portrait-frame img { animation: portrait-settle 900ms 120ms cubic-bezier(.2,.75,.25,1) both; }
+.portrait-glow { animation: glow-breathe 6s ease-in-out 900ms infinite; }
+.status-dot { animation: status-pulse 2.8s ease-in-out 1.2s infinite; }
+.hero-social a { transition: color .2s ease, transform .2s ease; }
+.hero-social a:hover { color: #c2b9ff; transform: translateY(-2px); }
+.skill-icon { transition: transform .25s ease, background .25s ease; }
+.skill-card:hover .skill-icon { transform: rotate(-7deg) scale(1.06); background: rgba(131,112,255,.2); }
+.art-glyph { transition: transform .4s cubic-bezier(.2,.75,.25,1); }
+.project-card:hover .art-glyph { transform: translateY(-5px) rotate(-4deg); }
+@media (prefers-reduced-motion: reduce) {
+  .site-header, .portrait-frame img, .portrait-glow, .status-dot { animation: none; }
+  .hero-social a, .skill-icon, .art-glyph { transition: none; }
+}

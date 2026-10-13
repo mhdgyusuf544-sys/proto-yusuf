@@ -9,7 +9,7 @@ window.PORTFOLIO = {
     about: "Saya mahasiswa Ilmu Komputer yang tertarik pada teknologi, pemrograman, pengembangan aplikasi, dan perangkat Internet of Things. Saat ini saya terus belajar dan mengasah kemampuan melalui proyek akademik maupun eksplorasi mandiri.",
     github: "https://github.com/mhdgyusuf544-sys",
     /* Taruh foto milik sendiri di assets/images/profile.jpg, lalu ubah avatarMode menjadi "profile". */
-    avatarMode: "avatar", profileImage: "assets/images/profile.jpg", avatarImage: "assets/images/avatar.svg"
+    avatarMode: "profile", profileImage: "assets/images/profile.jpg", avatarImage: "assets/images/avatar.svg"
   },
   education: [{ institution: "Universitas Pakuan Bogor", program: "Ilmu Komputer", detail: "Semester 5", period: "", description: "" }],
   skills: [
