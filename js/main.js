@@ -27,7 +27,7 @@
   $("#bio-list").innerHTML = details.filter(([, , v]) => v).map(([icon, label, value]) => `<div class="bio-row"><span class="bio-icon" aria-hidden="true">${icon}</span><span class="bio-label">${esc(label)}</span><b>${esc(value)}</b></div>`).join("");
   $("#education-list").innerHTML = data.education.filter(x => x.institution || x.program).map(x => `<article class="education-item reveal"><span class="timeline-pin"></span><div class="education-meta">${esc(x.period || "PENDIDIKAN SAAT INI")}</div><div><h3>${esc(x.institution)}</h3><p>${esc(x.program)}${x.detail ? ` <span>·</span> ${esc(x.detail)}` : ""}</p>${x.description ? `<p class="muted">${esc(x.description)}</p>` : ""}</div><span class="education-arrow">↗</span></article>`).join("");
   $("#skills-list").innerHTML = data.skills.filter(x => x.items?.length).map(x => `<article class="skill-card reveal"><div class="skill-card-head"><span class="skill-icon">${esc(x.icon)}</span><h3>${esc(x.category)}</h3></div><div class="skill-tags">${x.items.map(i => `<span>${esc(i)}</span>`).join("")}</div></article>`).join("");
-  const categories = ["Semua", "Web Development", "Mobile Development", "Internet of Things", "Data dan Pemrograman"];
+  const categories = ["Semua", "Web Development", "Mobile Development", "Internet of Things", "Database & Server", "Desain Grafis", "Sistem Digital", "Data dan Pemrograman"];
   const filter = $("#project-filters"); filter.innerHTML = categories.map((x, i) => `<button type="button" class="filter-button${i === 0 ? " active" : ""}" data-category="${esc(x)}" aria-pressed="${i === 0}">${esc(x)}</button>`).join("");
   const projectsEl = $("#projects-list");
   function renderProjects(category = "Semua") {
